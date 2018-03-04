@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+    <title>Zuckerborg | One day I'll be a real boy!</title>
+    <meta name="author" content="Bryson Reece, Ryan Dobyns">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        url = "https://www.cleverbot.com/getreply";
+        key = "CC7sx9KmvgxzoGKQLYHf6QkZD2g";
+
+        function ProcessReply (data) {
+            if (data.error) {
+                console.log("Error: " + data.error);
+                document.getElementById('output').innerHTML = "Error: " + data.error;
+            }
+            else {
+                if ('speechSynthesis' in window) {
+                    var msg = new SpeechSynthesisUtterance(data.output);
+                    msg.pitch = 0.05;
+                    window.speechSynthesis.speak(msg);
+                }
+                console.log("Response: " + data.output);
+                document.getElementById('output').innerHTML = data.output;
+            }
+
+            document.getElementById('inputBox').value = '';
+
+        }
+
+        function ProcessInput (input) {
+            console.log("Input: " + input);
+            input = encodeURIComponent (input);
+            document.getElementById('output').innerHTML = "Processing data via human brain...";
+            $.ajax({
+                url: url,
+                data: {"input": input, "key": key}, //input automatically encoded
+                dataType: "jsonp",
+                success: ProcessReply
+            });
+        }
+    </script>
+</head>
+<body style="margin: 0px; background: rgb(14, 14, 14);">
+    <div class="container mt-5">
+        <img src="https://zuckerb.org/zuck.jpg" class="mx-auto d-block img-fluid rounded" alt="'Zuckerborg' Image by Darkness84 on DeviantArt" title="'Zuckerborg' Image by Darkness84 on DeviantArt">
+        <div class="row my-5">
+            <div class="mx-auto d-block">
+                <h1 id="output" class="lead text-white"></h1>
+            </div>
+        </div>
+        <div class="row">
+            <div id="inputContainer" class="mx-auto d-block">
+                <div class="input-group mb-3">
+                    <input id="inputBox" type="text" class="form-control" placeholder="Speak to Zuckerborg...">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onClick="ProcessInput(document.getElementById('inputBox').value)">Speak</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
